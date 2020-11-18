@@ -1,0 +1,30 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build Singulairty RPMs
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the main branch
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Singularity release TAG'
+        required: true
+        default: 'v3.6.4'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: centos-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:      
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          wget https://github.com/hpcng/singularity/releases/download/${{ github.event.inputs.name }}/singularity-${{ github.event.inputs.name#v }}.tar.gz
+          dnf groupinstall -y 'Development Tools'
+          dnf install openssl-devel libuuid-devel libseccomp-devel wget squashfs-tools cryptsetup golang createrepo
+          rpmbuild -tb singularity-${{ github.event.inputs.name#v }}.tar.gz 
