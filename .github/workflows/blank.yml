@@ -24,7 +24,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          wget https://github.com/hpcng/singularity/releases/download/${{ github.event.inputs.name }}/singularity-${{ github.event.inputs.name#v }}.tar.gz
+          wget https://github.com/hpcng/singularity/releases/download/${{ github.event.inputs.name }}/singularity-${{ github.event.inputs.name | cut -c 1- }}.tar.gz
           dnf groupinstall -y 'Development Tools'
           dnf install openssl-devel libuuid-devel libseccomp-devel wget squashfs-tools cryptsetup golang createrepo
-          rpmbuild -tb singularity-${{ github.event.inputs.name#v }}.tar.gz 
+          rpmbuild -tb singularity-${{ github.event.inputs.name | cut -c 1- }}.tar.gz 
